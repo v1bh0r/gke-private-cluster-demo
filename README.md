@@ -3,27 +3,31 @@
 ## Table of Contents
 
 <!-- TOC -->
-* [Introduction](#introduction)
-  * [Public Clusters](#public-clusters)
-  * [Private Clusters](#private-clusters)
-  * [Workload Identity Overview](#workload-identity-overview)
-* [Demo Architecture](#demo-architecture)
-  * [Bastion Host](#bastion-host)
-  * [Workload Identity](#workload-identity)
-* [Prerequisites](#prerequisites)
-  * [Cloud Project](#cloud-project)
-  * [Required GCP APIs](#required-gcp-apis)
-  * [Run Demo in a Google Cloud Shell](#run-demo-in-a-google-cloud-shell)
-    * [Install Terraform](#install-terraform)
-    * [Install Cloud SDK](#install-cloud-sdk)
-    * [Install kubectl CLI](#install-kubectl-cli)
-  * [Authenticate gcloud](#authenticate-gcloud)
-  * [Configure gcloud settings](#configure-gcloud-settings)
-* [Create Resources](#create-resources)
-* [Validation](#validation)
-* [Tear Down](#tear-down)
-* [Troubleshooting](#troubleshooting)
-* [Relevant Material](#relevant-material)
+- [How to use a Private Cluster in Kubernetes Engine](#how-to-use-a-private-cluster-in-kubernetes-engine)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+    - [Public Clusters](#public-clusters)
+    - [Private Clusters](#private-clusters)
+    - [Workload Identity Overview](#workload-identity-overview)
+  - [Demo Architecture](#demo-architecture)
+    - [Bastion Host](#bastion-host)
+    - [Workload Identity](#workload-identity)
+  - [Prerequisites](#prerequisites)
+    - [Cloud Project](#cloud-project)
+    - [Required GCP APIs](#required-gcp-apis)
+    - [Run Demo in a Google Cloud Shell](#run-demo-in-a-google-cloud-shell)
+    - [Tools](#tools)
+      - [Install Terraform](#install-terraform)
+      - [Install Cloud SDK](#install-cloud-sdk)
+      - [Install kubectl CLI](#install-kubectl-cli)
+  - [Deployment](#deployment)
+    - [Authenticate gcloud](#authenticate-gcloud)
+    - [Configure gcloud settings](#configure-gcloud-settings)
+  - [Create Resources](#create-resources)
+  - [Validation](#validation)
+  - [Tear Down](#tear-down)
+  - [Troubleshooting](#troubleshooting)
+  - [Relevant Material](#relevant-material)
 <!-- TOC -->
 
 ## Introduction
@@ -141,7 +145,7 @@ The following APIs will be enabled:
 
 Click the button below to run the demo in a [Google Cloud Shell](https://cloud.google.com/shell/docs).
 
-[![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https://github.com/GoogleCloudPlatform/gke-private-cluster-demo.git&amp;cloudshell_image=gcr.io/graphite-cloud-shell-images/terraform:latest&amp;cloudshell_tutorial=README.md)
+[![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https://github.com/v1bh0r/konga-gke.git&amp;cloudshell_image=gcr.io/graphite-cloud-shell-images/terraform:latest&amp;cloudshell_tutorial=README.md)
 
 How to check your account's quota is documented here: [quotas](https://cloud.google.com/compute/quotas).
 
@@ -334,7 +338,7 @@ k logs -l 'app=pgadmin4' -c pgadmin4 -f
 To see the logs of the `cloud-sql-proxy` container:
 
 ```console
-k logs -l 'app=pgadmin4' -c cloudsql-proxy -f 
+k logs -l 'app=pgadmin4' -c cloudsql-proxy -f
 ```
 
 To see the logs of the `gke-metadata-proxy` containers which handle requests for "Workload Identity":
