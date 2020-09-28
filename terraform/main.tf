@@ -19,7 +19,7 @@ resource "google_container_cluster" "cluster" {
 
   name     = var.cluster_name
   project  = var.project
-  location = var.region
+  location = var.zone
 
   network    = google_compute_network.network.self_link
   subnetwork = google_compute_subnetwork.subnetwork.self_link
@@ -115,7 +115,7 @@ resource "google_container_node_pool" "private-np-1" {
   provider = "google-beta"
 
   name       = "private-np-1"
-  location   = var.region
+  location   = var.zone
   cluster    = google_container_cluster.cluster.name
   node_count = "1"
 

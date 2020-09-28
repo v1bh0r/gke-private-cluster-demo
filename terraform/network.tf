@@ -14,9 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+resource "random_id" "service_account_suffix" {
+  byte_length = 4
+}
+
 // Create the GKE service account
 resource "google_service_account" "gke-sa" {
-  account_id   = format("%s-node-sa", var.cluster_name)
+  account_id   = format("clstr-node-sa-%s", random_id.service_account_suffix.hex)
   display_name = "GKE Security Service Account"
   project      = var.project
 }
@@ -129,7 +133,7 @@ resource "google_compute_router_nat" "nat" {
 
 // Bastion Host
 locals {
-  hostname = format("%s-bastion", var.cluster_name)
+  hostname = format("%s-bastion-%s", var.cluster_name, random_id.service_account_suffix.hex)
 }
 
 // Dedicated service account for the Bastion instance
@@ -208,7 +212,7 @@ resource "google_compute_instance" "bastion" {
     command = <<EOF
         READY=""
         for i in $(seq 1 20); do
-          if gcloud compute ssh ${local.hostname} --project ${var.project} --zone ${var.region}-a --command uptime; then
+          if gcloud compute ssh ${local.hostname} --project ${var.project} --zone ${var.zone} --command uptime; then
             READY="yes"
             break;
           fi

@@ -34,7 +34,7 @@ resource "google_service_networking_connection" "private_vpc_connection" {
 
 // Create the Google SA
 resource "google_service_account" "access_postgres" {
-  account_id = format("%s-pg-sa", var.cluster_name)
+  account_id = format("pg-sa-%s", random_id.db_name_suffix.hex)
 }
 
 // Make an IAM policy that allows the K8S SA to be a workload identity user
@@ -70,8 +70,8 @@ resource "random_id" "db_name_suffix" {
 
 resource "google_sql_database_instance" "default" {
   project          = var.project
-  name             = format("%s-pg-%s", var.cluster_name, random_id.db_name_suffix.hex)
-  database_version = "POSTGRES_9_6"
+  name             = format("pg-%s", random_id.db_name_suffix.hex)
+  database_version = "POSTGRES_12"
   region           = var.region
 
   depends_on = [
@@ -86,11 +86,6 @@ resource "google_sql_database_instance" "default" {
     ip_configuration {
       ipv4_enabled    = "false"
       private_network = google_compute_network.network.self_link
-      // TODO Pull exact pod subnet
-      authorized_networks {
-        name  = "GKE Pod IPs"
-        value = "10.0.0.0/8"
-      }
     }
 
     disk_autoresize = false
