@@ -244,7 +244,7 @@ kubeconfig entry generated for private-cluster.
 Next, review the `pgadmin` `deployment` located in the `/manifests` directory:
 
 ```console
-cat manifests/pgadmin-deployment.yaml
+cat manifests/konga-deployment.yaml
 ```
 
 The manifest contains comments that explain the key features of the deployment configuration.  Now, deploy the application via:

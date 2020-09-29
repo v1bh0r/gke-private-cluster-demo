@@ -65,9 +65,12 @@ kubectl annotate serviceaccount -n default postgres --overwrite=true \
   iam.gke.io/gcp-service-account="${GCP_SA}"
 
 # Deployment of the pgadmin container with the cloud-sql-proxy "sidecar".
-echo 'Deploying PgAdmin'
-kubectl apply -f "${ROOT}/manifests/pgadmin-deployment.yaml"
+# echo 'Deploying PgAdmin'
+# kubectl apply -f "${ROOT}/manifests/pgadmin-deployment.yaml"
+
+echo 'Deploying Konga'
+kubectl apply -f "${ROOT}/manifests/konga-deployment.yaml"
 
 # Make sure it is running successfully.
 echo 'Waiting for rollout to complete and pod available.'
-kubectl rollout status --timeout=5m deployment/pgadmin4-deployment
+kubectl rollout status --timeout=5m deployment/konga-deployment
