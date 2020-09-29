@@ -64,7 +64,7 @@ output "cluster_ca_certificate" {
 
 output "get_credentials" {
   description = "Gcloud get-credentials command"
-  value       = format("gcloud container clusters get-credentials --project %s --region %s --internal-ip %s", var.project, var.region, var.cluster_name)
+  value       = format("gcloud container clusters get-credentials --project %s --region %s --zone %s --internal-ip %s", var.project, var.region, var.zone, var.cluster_name)
 }
 output "bastion_ssh" {
   description = "Gcloud compute ssh to the bastion host command"
