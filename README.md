@@ -257,7 +257,7 @@ Did not detect a running SSH tunnel.  Opening a new one.
 Pseudo-terminal will not be allocated because stdin is not a terminal.
 SSH Tunnel/Proxy is now running.
 Creating the PgAdmin Configmap
-configmap/connectionname created
+configmap/pgconnection created
 Creating the PgAdmin Console secret
 secret/pgadmin-console created
 serviceaccount/postgres created

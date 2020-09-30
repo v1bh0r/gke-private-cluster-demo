@@ -82,7 +82,7 @@ resource "google_sql_database_instance" "default" {
   ]
 
   settings {
-    tier              = "db-f1-micro"
+    tier              = "db-g1-small" # Run the command `gcloud sql tiers list` to get a list of available tiers
     activation_policy = "ALWAYS"
     availability_type = "ZONAL"
 
@@ -108,8 +108,8 @@ resource "google_sql_database_instance" "default" {
   }
 }
 
-resource "google_sql_database" "default" {
-  name       = "default"
+resource "google_sql_database" "kong" {
+  name       = "kong"
   project    = var.project
   instance   = google_sql_database_instance.default.name
   collation  = "en_US.UTF8"

@@ -52,7 +52,7 @@ spec:
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: connectionname
+                  name: pgconnection
                   key: postgres_private_ip
             - name: DB_PORT
               value: "5432"

@@ -66,13 +66,9 @@ GCP_SA="$(cd terraform && terraform output gcp_serviceaccount)"
 kubectl annotate serviceaccount -n default postgres --overwrite=true \
   iam.gke.io/gcp-service-account="${GCP_SA}"
 
-# Deployment of the pgadmin container with the cloud-sql-proxy "sidecar".
-# echo 'Deploying PgAdmin'
-# kubectl apply -f "${ROOT}/manifests/pgadmin-deployment.yaml"
-
-echo 'Deploying Konga'
-kubectl apply -f "${ROOT}/manifests/konga-deployment.yaml"
+echo 'Preparing Konga'
+kubectl apply -f "${ROOT}/manifests/konga-prepare-job.yaml"
 
 # Make sure it is running successfully.
 echo 'Waiting for rollout to complete and pod available.'
-kubectl rollout status --timeout=5m deployment/konga-deployment
+kubectl wait --for=condition=complete --timeout=30s jobs/konga-prepare-job

@@ -30,6 +30,10 @@ help:
 create:
 	@$(ROOT)/scripts/create.sh
 
+.PHONY: prepare-deployment
+prepare-deployment:
+	@$(ROOT)/scripts/prepare-deployment.sh
+
 .PHONY: deploy
 deploy:
 	@$(ROOT)/scripts/deploy.sh
