@@ -3,13 +3,13 @@ kind: Job
 metadata:
   name: konga-prepare-job
 spec:
+  ttlSecondsAfterFinished: 100
   template:
     spec:
       containers:
       - name: konga-prepare-job
         image: pantsel/konga:0.14.9
-        command: ["/bin/sh"]
-        args: ["-c", "node ./bin/konga.js --adapter postgres --uri postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_DATABASE"]
+        command: ["sh", "-c", "node ./bin/konga.js prepare --adapter postgres --uri postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_DATABASE"]
         env:
           - name: NODE_ENV
             value: production
