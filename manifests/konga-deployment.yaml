@@ -74,40 +74,14 @@ spec:
           - name: http
             containerPort: 1337
             protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-        # We are pulling the Cloud SQL Proxy container from the official Google
-        # container repository
-        - image: gcr.io/cloudsql-docker/gce-proxy:1.14
-          imagePullPolicy: Always
-          name: cloudsql-proxy
-          securityContext:
-            runAsUser: 2  # non-root user
-            allowPrivilegeEscalation: false
-          # You can make environment variables from GKE configurations
-          # You can read them from a configmap directly with configMapKeyRef
-          env:
-            - name: INSTANCE_CONNECTION
-              valueFrom:
-                configMapKeyRef:
-                  name: connectionname
-                  key: connectionname
-          # Connecting to the PRIVATE IP of the DB instance.
-          # We will be getting the GCP credentials dynamically via the metadata
-          # service proxied by the workload identity agent running inside GKE
-          # that maps the Kubernetes Service Account to the GCP Service account
-          # automatically.
-          command: [
-            "/cloud_sql_proxy",
-            "-instances=$(INSTANCE_CONNECTION)=tcp:5432",
-            "-ip_address_types=PRIVATE"
-          ]
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
 
 ---
 apiVersion: v1
@@ -117,8 +91,14 @@ metadata:
     app: konga
   name: konga-svc
 spec:
+  type: LoadBalancer
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 1337
+    - name: https
+      protocol: TCP
       port: 443
       targetPort: 1337
   selector:
