@@ -42,8 +42,10 @@ export HTTPS_PROXY=localhost:8888
 # Create the configmap that includes the connection string for the DB.
 echo 'Creating the PgAdmin Configmap'
 POSTGRES_CONNECTION="$(cd terraform && terraform output postgres_connection)"
+POSTGRES_PRIVATE_IP="$(cd terraform && terraform output postgres_private_ip)"
 kubectl create configmap connectionname \
   --from-literal=connectionname="${POSTGRES_CONNECTION}" \
+  --from-literal=postgres_private_ip="${POSTGRES_PRIVATE_IP}" \
   --dry-run -o yaml | kubectl apply -f -
 
 # Create the secret that includes the user/pass for pgadmin

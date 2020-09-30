@@ -52,6 +52,9 @@ data "google_iam_policy" "access_postgres" {
 resource "google_service_account_iam_policy" "access_postgres" {
   service_account_id = google_service_account.access_postgres.name
   policy_data        = data.google_iam_policy.access_postgres.policy_data
+  depends_on = [
+    "google_service_account.access_postgres"
+  ]
 }
 
 // Attach cloudsql access permissions to the Google SA.
@@ -71,7 +74,7 @@ resource "random_id" "db_name_suffix" {
 resource "google_sql_database_instance" "default" {
   project          = var.project
   name             = format("pg-%s", random_id.db_name_suffix.hex)
-  database_version = "POSTGRES_12"
+  database_version = "POSTGRES_11"
   region           = var.region
 
   depends_on = [
@@ -107,6 +110,14 @@ resource "google_sql_database_instance" "default" {
 
 resource "google_sql_database" "default" {
   name       = "default"
+  project    = var.project
+  instance   = google_sql_database_instance.default.name
+  collation  = "en_US.UTF8"
+  depends_on = ["google_sql_database_instance.default"]
+}
+
+resource "google_sql_database" "konga" {
+  name       = "konga"
   project    = var.project
   instance   = google_sql_database_instance.default.name
   collation  = "en_US.UTF8"

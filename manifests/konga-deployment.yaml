@@ -50,9 +50,14 @@ spec:
             - name: DB_ADAPTER
               value: postgres
             - name: DB_HOST
-              value: localhost
+              valueFrom:
+                configMapKeyRef:
+                  name: connectionname
+                  key: postgres_private_ip
             - name: DB_PORT
               value: "5432"
+            - name: DB_POOLSIZE
+              value: "2"
             - name: DB_DATABASE
               value: konga
             - name: DB_USER
@@ -66,24 +71,19 @@ spec:
                   name: pgadmin-console
                   key: password
           ports:
-            ports:
-            - name: http
-              containerPort: 1337
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+          - name: http
+            containerPort: 1337
+            protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
         # We are pulling the Cloud SQL Proxy container from the official Google
         # container repository
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/sh", "-c", "prepare -a $DB_ADAPTER -u $DB_ADAPTER://"]
         - image: gcr.io/cloudsql-docker/gce-proxy:1.14
           imagePullPolicy: Always
           name: cloudsql-proxy
@@ -116,7 +116,6 @@ metadata:
   labels:
     app: konga
   name: konga-svc
-  namespace: alt
 spec:
   ports:
     - protocol: TCP

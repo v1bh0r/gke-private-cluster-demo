@@ -32,6 +32,12 @@ output "postgres_instance" {
   value       = google_sql_database_instance.default.name
 }
 
+// Used when setting up the GKE cluster to talk to Postgres.
+output "postgres_private_ip" {
+  description = "The generated private ip of the Cloud SQL instance"
+  value       = google_sql_database_instance.default.private_ip_address
+}
+
 // Full connection string for the Postgres DB>
 output "postgres_connection" {
   description = "The connection string dynamically generated for storage inside the Kubernetes configmap"
@@ -64,7 +70,7 @@ output "cluster_ca_certificate" {
 
 output "get_credentials" {
   description = "Gcloud get-credentials command"
-  value       = format("gcloud container clusters get-credentials --project %s --region %s --zone %s --internal-ip %s", var.project, var.region, var.zone, var.cluster_name)
+  value       = format("gcloud container clusters get-credentials --project %s --zone %s --internal-ip %s", var.project, var.zone, var.cluster_name)
 }
 output "bastion_ssh" {
   description = "Gcloud compute ssh to the bastion host command"
