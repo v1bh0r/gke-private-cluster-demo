@@ -718,17 +718,14 @@ spec:
         - name: CONTROLLER_KONG_ADMIN_TLS_SKIP_VERIFY
           value: "true"
         - name: CONTROLLER_PUBLISH_SERVICE
-          value: kong/kong-proxy
+          value: default/kong-proxy
         - name: POD_NAME
           valueFrom:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.name
         - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              apiVersion: v1
-              fieldPath: metadata.namespace
+          value: default
         image: kong-docker-kubernetes-ingress-controller.bintray.io/kong-ingress-controller:0.10.0
         imagePullPolicy: IfNotPresent
         livenessProbe:

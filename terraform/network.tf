@@ -70,18 +70,18 @@ resource "google_compute_subnetwork" "subnetwork" {
   project       = var.project
   network       = google_compute_network.network.self_link
   region        = var.region
-  ip_cidr_range = "10.0.0.0/24"
+  ip_cidr_range = "192.168.2.0/24"
 
   private_ip_google_access = true
 
   secondary_ip_range {
     range_name    = format("%s-pod-range", var.cluster_name)
-    ip_cidr_range = "10.1.0.0/16"
+    ip_cidr_range = "192.168.3.0/24"
   }
 
   secondary_ip_range {
     range_name    = format("%s-svc-range", var.cluster_name)
-    ip_cidr_range = "10.2.0.0/20"
+    ip_cidr_range = "192.168.4.0/24"
   }
 }
 // Create an external NAT IP

@@ -246,7 +246,14 @@ Next, review the deployment manifests located in the `/manifests` directory:
 ls manifests/
 ```
 
-The manifest contains comments that explain the key features of the deployment configuration. Now, deploy the application via:
+The manifest contains comments that explain the key features of the deployment configuration.
+
+In case you have created the databases fresh, you would need to run Kong and Konga DB Migrations for them to work. Run the following to prepare the database
+
+```console
+TF_VAR_project=<your-gcp-project-name> TF_VAR_region=us-east4 TF_VAR_zone=us-east4-b make run-database-migrations
+
+Now, deploy the application via:
 
 ```console
 TF_VAR_project=<your-gcp-project-name> TF_VAR_region=us-east4 TF_VAR_zone=us-east4-b make deploy

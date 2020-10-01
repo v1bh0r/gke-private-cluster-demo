@@ -88,7 +88,7 @@ resource "google_container_cluster" "cluster" {
   private_cluster_config {
     enable_private_endpoint = "true"
     enable_private_nodes    = "true"
-    master_ipv4_cidr_block  = "172.16.0.16/28"
+    master_ipv4_cidr_block  = "192.168.5.0/28"
   }
 
   // Allow plenty of time for each operation to finish (default was 10m)

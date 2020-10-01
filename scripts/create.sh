@@ -43,6 +43,3 @@ source "${ROOT}/scripts/common.sh"
 # Get cluster credentials
 GET_CREDS="$(terraform output --state=terraform/terraform.tfstate get_credentials)"
 ${GET_CREDS}
-
-# The databases need some database migrations to run when used for the first-time
-source "${ROOT}/scripts/run-database-migrations.sh"
