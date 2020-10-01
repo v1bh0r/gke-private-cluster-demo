@@ -1,9 +1,9 @@
-# How to use a Private Cluster in Kubernetes Engine
+# Deploy Kong and Konga in Kubernetes Engine
 
 ## Table of Contents
 
 <!-- TOC -->
-- [How to use a Private Cluster in Kubernetes Engine](#how-to-use-a-private-cluster-in-kubernetes-engine)
+- [Deploy Kong and Konga in Kubernetes Engine](#deploy-kong-and-konga-in-kubernetes-engine)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
     - [Public Clusters](#public-clusters)
@@ -24,15 +24,14 @@
     - [Authenticate gcloud](#authenticate-gcloud)
     - [Configure gcloud settings](#configure-gcloud-settings)
   - [Create Resources](#create-resources)
-  - [Validation](#validation)
-  - [Tear Down](#tear-down)
   - [Troubleshooting](#troubleshooting)
   - [Relevant Material](#relevant-material)
 <!-- TOC -->
 
 ## Introduction
 
-This guide demonstrates creating a Kubernetes private cluster in [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview) (GKE) running a sample Kubernetes workload that connects to a [Cloud SQL](https://cloud.google.com/sql/docs/postgres/) instance using the [cloud-sql-proxy](https://cloud.google.com/sql/docs/mysql/connect-kubernetes-engine) "sidecar". In addition, the [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) (currently in Beta) feature is used to provide credentials directly to the `cloud-sql-proxy` container to facilitate secure tunneling to the `cloud sql` instance without having to handle GCP credentials manually.
+The project deploys Kong and Konga in a private cluster on GKE.
+<!-- This guide demonstrates creating a Kubernetes private cluster in [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview) (GKE) running a sample Kubernetes workload that connects to a [Cloud SQL](https://cloud.google.com/sql/docs/postgres/) instance using the [cloud-sql-proxy](https://cloud.google.com/sql/docs/mysql/connect-kubernetes-engine) "sidecar". In addition, the [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) (currently in Beta) feature is used to provide credentials directly to the `cloud-sql-proxy` container to facilitate secure tunneling to the `cloud sql` instance without having to handle GCP credentials manually. -->
 
 ### Public Clusters
 
@@ -219,7 +218,7 @@ Updated property [core/project].
 To create the entire environment via Terraform, run the following command:
 
 ```console
-make create
+TF_VAR_project=<your-gcp-project-name> TF_VAR_region=us-east4 TF_VAR_zone=us-east4-b make create
 
 Apply complete! Resources: 33 added, 0 changed, 0 destroyed.
 
@@ -241,16 +240,16 @@ Fetching cluster endpoint and auth data.
 kubeconfig entry generated for private-cluster.
 ```
 
-Next, review the `pgadmin` `deployment` located in the `/manifests` directory:
+Next, review the deployment manifests located in the `/manifests` directory:
 
 ```console
-cat manifests/konga-deployment.yaml
+ls manifests/
 ```
 
-The manifest contains comments that explain the key features of the deployment configuration.  Now, deploy the application via:
+The manifest contains comments that explain the key features of the deployment configuration. Now, deploy the application via:
 
 ```console
-make deploy
+TF_VAR_project=<your-gcp-project-name> TF_VAR_region=us-east4 TF_VAR_zone=us-east4-b make deploy
 
 Detecting SSH Bastion Tunnel/Proxy
 Did not detect a running SSH tunnel.  Opening a new one.
@@ -298,7 +297,7 @@ k get svc --all-namespaces
 
 Note: `export`-ing the `HTTPS_PROXY` setting in the current terminal may alter the behavior of other common tools that honor that setting (e.g. `curl` and other web related tools).  The shell `alias` helps localize the usage to the current invocation of the command only.
 
-## Validation
+<!-- ## Validation
 
 If no errors are displayed during deployment, you should see your Kubernetes Engine cluster in the [GCP Console](https://console.cloud.google.com/kubernetes) with the sample application deployed. This may take a few minutes.
 
@@ -345,7 +344,7 @@ To see the logs of the `gke-metadata-proxy` containers which handle requests for
 
 ```console
 k logs -n kube-system -l 'k8s-app=gke-metadata-server' -f
-```
+``` -->
 
 ## Tear Down
 

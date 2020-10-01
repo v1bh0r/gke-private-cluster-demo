@@ -66,10 +66,17 @@ GCP_SA="$(cd terraform && terraform output gcp_serviceaccount)"
 kubectl annotate serviceaccount -n default postgres --overwrite=true \
   iam.gke.io/gcp-service-account="${GCP_SA}"
 
+echo 'Preparing Kong'
+kubectl apply -f "${ROOT}/manifests/kong-prepare-job.yaml"
+# Make sure it is running successfully.
+echo 'Waiting for rollout to complete and pod available.'
+kubectl wait --for=condition=complete --timeout=30s jobs/kong-prepare-job
+kubectl delete jobs/kong-prepare-job
+
 echo 'Preparing Konga'
 kubectl apply -f "${ROOT}/manifests/konga-prepare-job.yaml"
-
 # Make sure it is running successfully.
 echo 'Waiting for rollout to complete and pod available.'
 kubectl wait --for=condition=complete --timeout=30s jobs/konga-prepare-job
 kubectl delete jobs/konga-prepare-job
+

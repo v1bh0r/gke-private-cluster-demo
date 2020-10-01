@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kong-prepare-job
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      containers:
+      - name: kong-prepare-job
+        image: kong
+        command: ["sh", "-c", "kong migrations bootstrap"]
+        env:
+          - name: KONG_LOG_LEVEL
+            value: debug
+          - name: KONG_DATABASE
+            value: "postgres"
+          - name: KONG_PG_DATABASE
+            value: "kong"
+          - name: KONG_PG_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: pgconnection
+                key: postgres_private_ip
+          - name: KONG_PG_USER
+            valueFrom:
+              secretKeyRef:
+                name: pgadmin-console
+                key: user
+          - name: KONG_PG_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: pgadmin-console
+                key: password
+      restartPolicy: Never
+  backoffLimit: 1

@@ -30,9 +30,9 @@ help:
 create:
 	@$(ROOT)/scripts/create.sh
 
-.PHONY: prepare-deployment
-prepare-deployment:
-	@$(ROOT)/scripts/prepare-deployment.sh
+.PHONY: run-database-migrations
+run-database-migrations:
+	@$(ROOT)/scripts/run-database-migrations.sh
 
 .PHONY: deploy
 deploy:
@@ -42,9 +42,9 @@ deploy:
 teardown:
 	@$(ROOT)/scripts/destroy.sh
 
-.PHONY: validate
-validate:
-	@${ROOT}/scripts/validate.sh
+# .PHONY: validate
+# validate:
+# 	@${ROOT}/scripts/validate.sh
 
 
 ######################################
