@@ -147,7 +147,7 @@ resource "google_container_node_pool" "private-np-1" {
     labels = {
       cluster = var.cluster_name
     }
-
+    tags = ["https"]
     // Enable workload identity on this node pool
     workload_metadata_config {
       node_metadata = "GKE_METADATA_SERVER"

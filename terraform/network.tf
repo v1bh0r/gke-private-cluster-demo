@@ -158,6 +158,23 @@ resource "google_compute_firewall" "bastion-ssh" {
   target_tags = ["bastion"]
 }
 
+// Allow access to the Kong/Konga from outside
+resource "google_compute_firewall" "https" {
+  name          = format("%s-https", var.cluster_name)
+  network       = google_compute_network.network.name
+  direction     = "INGRESS"
+  project       = var.project
+  source_ranges = ["0.0.0.0/0"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+
+  target_tags = ["https"]
+}
+
+
 // The user-data script on Bastion instance provisioning
 data "template_file" "startup_script" {
   template = <<-EOF
