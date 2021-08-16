@@ -45,3 +45,4 @@ credentials.json
 # postgres db name
 .instance
 
+/.idea/

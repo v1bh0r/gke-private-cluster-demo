@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: konga-deployment
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: konga
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: konga
+  template:
+    metadata:
+      labels:
+        app: konga
+    spec:
+      serviceAccount: postgres
+      containers:
+        # This is the official konga container
+        - image: pantsel/konga:0.14.9
+          name: konga
+          # You can make environment variables from GKE secrets
+          # You can read them directly using 'secretKeyRef'
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: DB_ADAPTER
+              value: postgres
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: pgconnection
+                  key: postgres_private_ip
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_POOLSIZE
+              value: "2"
+            - name: DB_DATABASE
+              value: konga
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pgsecrets
+                  key: user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgsecrets
+                  key: password
+          ports:
+          - name: http
+            containerPort: 1337
+            protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: konga
+  name: konga-svc
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 1337
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 1337
+  selector:
+    app: konga
